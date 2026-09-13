@@ -1,0 +1,272 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Windows 7 - Starting up...</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html, body {
+            width: 100%;
+            height: 100%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background: linear-gradient(135deg, #0a47a0 0%, #1e5ba8 35%, #2e7ad1 70%, #1e5ba8 100%);
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            overflow: hidden;
+            user-select: none;
+        }
+
+        body {
+            position: relative;
+            background-attachment: fixed;
+        }
+
+        /* Background animation */
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: radial-gradient(circle at 20% 50%, rgba(0, 164, 239, 0.1) 0%, transparent 50%),
+                        radial-gradient(circle at 80% 80%, rgba(127, 186, 0, 0.1) 0%, transparent 50%);
+            pointer-events: none;
+            animation: bgPulse 8s ease-in-out infinite;
+        }
+
+        @keyframes bgPulse {
+            0%, 100% {
+                opacity: 0.5;
+            }
+            50% {
+                opacity: 1;
+            }
+        }
+
+        .boot-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 50px;
+            z-index: 10;
+            position: relative;
+            padding: 20px;
+        }
+
+        .windows-logo-container {
+            position: relative;
+            width: 180px;
+            height: 180px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .windows-logo {
+            width: 160px;
+            height: 160px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: rgba(255, 255, 255, 0.12);
+            border: 2px solid rgba(255, 255, 255, 0.2);
+            border-radius: 20px;
+            backdrop-filter: blur(20px);
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3),
+                        inset 0 1px 0 rgba(255, 255, 255, 0.2);
+            animation: logoFadeIn 1.2s cubic-bezier(0.34, 1.56, 0.64, 1);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .windows-logo::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: linear-gradient(45deg, transparent 30%, rgba(255, 255, 255, 0.1) 50%, transparent 70%);
+            animation: shimmer 3s infinite;
+        }
+
+        .windows-logo svg {
+            width: 130px;
+            height: 130px;
+            filter: drop-shadow(0 4px 12px rgba(0, 0, 0, 0.4));
+            position: relative;
+            z-index: 2;
+        }
+
+        @keyframes shimmer {
+            0% {
+                transform: translateX(-100%) translateY(-100%);
+            }
+            100% {
+                transform: translateX(100%) translateY(100%);
+            }
+        }
+
+        @keyframes logoFadeIn {
+            0% {
+                opacity: 0;
+                transform: scale(0.5) rotateZ(-10deg);
+            }
+            50% {
+                opacity: 1;
+            }
+            100% {
+                opacity: 1;
+                transform: scale(1) rotateZ(0deg);
+            }
+        }
+
+        .boot-text {
+            color: white;
+            font-size: 48px;
+            font-weight: 300;
+            letter-spacing: 4px;
+            text-align: center;
+            opacity: 0;
+            animation: textFadeIn 1s cubic-bezier(0.25, 0.46, 0.45, 0.94) 0.6s forwards;
+            text-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+        }
+
+        @keyframes textFadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .boot-subtitle {
+            color: rgba(255, 255, 255, 0.6);
+            font-size: 14px;
+            letter-spacing: 1px;
+            margin-top: -30px;
+            opacity: 0;
+            animation: textFadeIn 1s cubic-bezier(0.25, 0.46, 0.45, 0.94) 1.2s forwards;
+        }
+
+        .loading-section {
+            display: flex;
+            flex-direction: column;
+            gap: 25px;
+            align-items: center;
+        }
+
+        .loading-bar-container {
+            width: 350px;
+            height: 6px;
+            background: rgba(255, 255, 255, 0.15);
+            border-radius: 3px;
+            overflow: hidden;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2),
+                        inset 0 1px 3px rgba(255, 255, 255, 0.1);
+            opacity: 0;
+            animation: barFadeIn 0.8s cubic-bezier(0.34, 1.56, 0.64, 1) 1.4s forwards;
+            position: relative;
+        }
+
+        @keyframes barFadeIn {
+            from {
+                opacity: 0;
+                transform: scaleX(0.8);
+            }
+            to {
+                opacity: 1;
+                transform: scaleX(1);
+            }
+        }
+
+        .loading-bar {
+            height: 100%;
+            background: linear-gradient(90deg, 
+                #00a4ef 0%, 
+                #1084d7 20%, 
+                #7fba00 40%,
+                #ffc40d 60%,
+                #f7630c 80%,
+                #da3b01 100%);
+            width: 0%;
+            animation: barFill 3.5s cubic-bezier(0.42, 0, 0.58, 1) 1.8s forwards;
+            border-radius: 3px;
+            box-shadow: 0 0 15px rgba(0, 164, 239, 0.6);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .loading-bar::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            bottom: 0;
+            right: 0;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+            animation: shimmer 1.5s infinite;
+        }
+
+        @keyframes barFill {
+            0% {
+                width: 0%;
+                box-shadow: 0 0 10px rgba(0, 164, 239, 0.8);
+            }
+            30% {
+                width: 30%;
+                box-shadow: 0 0 15px rgba(16, 132, 215, 0.8);
+            }
+            60% {
+                width: 65%;
+                box-shadow: 0 0 20px rgba(127, 186, 0, 0.8);
+            }
+            85% {
+                width: 92%;
+                box-shadow: 0 0 20px rgba(255, 192, 13, 0.8);
+            }
+            100% {
+                width: 100%;
+                box-shadow: 0 0 25px rgba(218, 59, 1, 0.8);
+            }
+        }
+
+        .status-text {
+            color: rgba(255, 255, 255, 0.8);
+            font-size: 14px;
+            text-align: center;
+            height: 40px;
+            min-width: 350px;
+            opacity: 0;
+            animation: statusFadeIn 0.6s cubic-bezier(0.25, 0.46, 0.45, 0.94) 1.8s forwards;
+            font-family: 'Segoe UI', sans-serif;
+            font-weight: 400;
+            letter-spacing: 0.5px;
+        }
+
+        @keyframes statusFadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+            to {
+                opacity: 0.8;
+                transform: translateY(0);
+            }
+        }
+
+        /* Boot messages panel */\n        .boot-messages {\n            position: fixed;\n            bottom: 40px;\n            left: 40px;\n            color: rgba(255, 255, 255, 0.4);\n            font-size: 11px;\n            font-family: 'Courier New', monospace;\n            max-width: 450px;\n            max-height: 180px;\n            overflow-y: auto;\n            line-height: 1.8;\n            background: rgba(0, 0, 0, 0.2);\n            backdrop-filter: blur(10px);\n            padding: 12px 15px;\n            border-radius: 4px;\n            border: 1px solid rgba(255, 255, 255, 0.1);\n            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);\n            opacity: 0;\n            animation: messagesPanelFadeIn 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94) 2s forwards;\n        }\n\n        @keyframes messagesPanelFadeIn {\n            from {\n                opacity: 0;\n                transform: translateX(-20px);\n            }\n            to {\n                opacity: 1;\n                transform: translateX(0);\n            }\n        }\n\n        .boot-message {\n            opacity: 0;\n            animation: messageFadeIn 0.4s ease-out forwards;\n            color: rgba(255, 255, 255, 0.5);\n            border-left: 2px solid rgba(0, 164, 239, 0.4);\n            padding-left: 10px;\n        }\n\n        @keyframes messageFadeIn {\n            from {\n                opacity: 0;\n                transform: translateX(-10px);\n            }\n            to {\n                opacity: 1;\n                transform: translateX(0);\n            }\n        }\n\n        .boot-message.system {\n            color: rgba(127, 186, 0, 0.6);\n            border-left-color: rgba(127, 186, 0, 0.4);\n        }\n\n        .boot-message.app {\n            color: rgba(255, 192, 13, 0.6);\n            border-left-color: rgba(255, 192, 13, 0.4);\n        }\n\n        .boot-message.complete {\n            color: rgba(127, 186, 0, 0.8);\n            border-left-color: rgba(127, 186, 0, 0.6);\n        }\n\n        /* Version info */\n        .version-text {\n            position: fixed;\n            bottom: 40px;\n            right: 40px;\n            color: rgba(255, 255, 255, 0.35);\n            font-size: 11px;\n            font-family: 'Courier New', monospace;\n            text-align: right;\n            line-height: 1.8;\n            opacity: 0;\n            animation: messagesPanelFadeIn 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94) 2s forwards;\n        }\n\n        .version-text div {\n            opacity: 0.6;\n            font-size: 10px;\n        }\n\n        /* Scrollbar styling */\n        .boot-messages::-webkit-scrollbar {\n            width: 6px;\n        }\n\n        .boot-messages::-webkit-scrollbar-track {\n            background: rgba(255, 255, 255, 0.05);\n        }\n\n        .boot-messages::-webkit-scrollbar-thumb {\n            background: rgba(255, 255, 255, 0.2);\n            border-radius: 3px;\n        }\n\n        .boot-messages::-webkit-scrollbar-thumb:hover {\n            background: rgba(255, 255, 255, 0.3);\n        }\n\n        /* Responsive design */\n        @media (max-width: 768px) {\n            .boot-text {\n                font-size: 32px;\n            }\n\n            .boot-subtitle {\n                font-size: 12px;\n            }\n\n            .loading-bar-container {\n                width: 280px;\n            }\n\n            .boot-messages,\n            .version-text {\n                font-size: 10px;\n                max-width: 350px;\n            }\n        }\n    </style>\n</head>\n<body>\n    <div class=\"boot-container\">\n        <div class=\"windows-logo-container\">\n            <div class=\"windows-logo\">\n                <svg viewBox=\"0 0 24 24\" fill=\"none\" xmlns=\"http://www.w3.org/2000/svg\">\n                    <!-- Windows Logo - 4 squares -->\n                    <rect x=\"3\" y=\"3\" width=\"8\" height=\"8\" fill=\"white\" opacity=\"0.95\"/>\n                    <rect x=\"13\" y=\"3\" width=\"8\" height=\"8\" fill=\"white\" opacity=\"0.95\"/>\n                    <rect x=\"3\" y=\"13\" width=\"8\" height=\"8\" fill=\"white\" opacity=\"0.95\"/>\n                    <rect x=\"13\" y=\"13\" width=\"8\" height=\"8\" fill=\"white\" opacity=\"0.95\"/>\n                </svg>\n            </div>\n        </div>\n\n        <div>\n            <div class=\"boot-text\">Windows 7</div>\n            <div class=\"boot-subtitle\">Web OS Edition</div>\n        </div>\n\n        <div class=\"loading-section\">\n            <div class=\"loading-bar-container\">\n                <div class=\"loading-bar\"></div>\n            </div>\n            <div class=\"status-text\" id=\"status\">Starting Windows...</div>\n        </div>\n    </div>\n\n    <div class=\"boot-messages\" id=\"messages\"></div>\n\n    <div class=\"version-text\">\n        <div>Windows 7 Web OS Clone</div>\n        <div>Build 7601 Vanilla JS</div>\n        <div>Copyright © 2024</div>\n    </div>\n\n    <script>\n        const bootSequence = [\n            { message: 'KERNEL: Initializing system core...', delay: 1900, type: 'system' },\n            { message: 'HAL: Loading hardware abstraction layer...', delay: 2100, type: 'system' },\n            { message: 'SYSTEM32: Initializing kernel.js module...', delay: 2300, type: 'system' },\n            { message: 'DRIVERS: Loading windowManager.js engine...', delay: 2500, type: 'system' },\n            { message: 'SERVICES: Starting taskbar service...', delay: 2700, type: 'system' },\n            { message: 'LOADER: Initializing Notepad application...', delay: 2900, type: 'app' },\n            { message: 'LOADER: Initializing File Explorer module...', delay: 3100, type: 'app' },\n            { message: 'LOADER: Initializing Device Manager interface...', delay: 3300, type: 'app' },\n            { message: 'LOADER: Initializing Control Panel settings...', delay: 3500, type: 'app' },\n            { message: 'FILESYS: Mounting C:\\ virtual drive...', delay: 3700, type: 'system' },\n            { message: 'FILESYS: Mounting Desktop directory...', delay: 3900, type: 'system' },\n            { message: 'FILESYS: Mounting Documents folder...', delay: 4100, type: 'system' },\n            { message: 'GRAPHICS: Initializing Aero Glass effects...', delay: 4300, type: 'system' },\n            { message: 'GRAPHICS: Loading display adapter drivers...', delay: 4500, type: 'system' },\n            { message: 'DESKTOP: Preparing desktop environment...', delay: 4700, type: 'system' },\n            { message: 'DESKTOP: Loading desktop icons and wallpaper...', delay: 4900, type: 'system' },\n            { message: 'SHELL: Initializing Windows Explorer shell...', delay: 5100, type: 'system' },\n            { message: 'AUTH: User authentication complete...', delay: 5300, type: 'system' },\n            { message: 'SYSTEM: All services loaded and ready!', delay: 5500, type: 'complete' }\n        ];\n\n        const statusMessages = [\n            { text: 'Starting Windows...', delay: 1500 },\n            { text: 'Loading system modules...', delay: 2200 },\n            { text: 'Initializing applications...', delay: 3200 },\n            { text: 'Configuring display...', delay: 4200 },\n            { text: 'Preparing desktop...', delay: 5000 },\n            { text: 'Almost done...', delay: 5700 }\n        ];\n\n        function addBootMessage(message, type) {\n            const messagesDiv = document.getElementById('messages');\n            const msg = document.createElement('div');\n            msg.className = `boot-message ${type || ''}`;\n            const timestamp = new Date().toLocaleTimeString();\n            msg.textContent = `[${timestamp}] ${message}`;\n            messagesDiv.appendChild(msg);\n            messagesDiv.scrollTop = messagesDiv.scrollHeight;\n        }\n\n        function updateStatus(text) {\n            document.getElementById('status').textContent = text;\n        }\n\n        // Add boot messages\n        bootSequence.forEach((item) => {\n            setTimeout(() => {\n                addBootMessage(item.message, item.type);\n            }, item.delay);\n        });\n\n        // Update status text\n        statusMessages.forEach((item) => {\n            setTimeout(() => {\n                updateStatus(item.text);\n            }, item.delay);\n        });\n\n        // Redirect to main OS after boot completes\n        setTimeout(() => {\n            window.location.href = './os.html';\n        }, 5800);\n    </script>\n</body>\n</html>\n
