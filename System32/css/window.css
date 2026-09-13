@@ -1,0 +1,160 @@
+/* Window Frame & Controls CSS */
+
+.window-container {
+    position: relative;
+    width: 100%;
+    height: calc(100vh - 40px);
+    z-index: 1000;
+}
+
+.window {
+    position: absolute;
+    background: linear-gradient(to bottom, rgba(245, 245, 245, 0.95), rgba(235, 235, 235, 0.95));
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(0, 0, 0, 0.2);
+    border-radius: 4px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.25);
+    display: flex;
+    flex-direction: column;
+    min-width: 300px;
+    min-height: 200px;
+    overflow: hidden;
+    transition: box-shadow 0.1s ease;
+}
+
+.window.active {
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.35);
+}
+
+.window.minimized {
+    display: none !important;
+}
+
+/* Window Title Bar */
+.window .window-titlebar {
+    flex-shrink: 0;
+    height: 29px;
+    padding: 2px 4px;
+}
+
+.window .window-titlebar-text {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    font-size: 12px;
+    font-weight: 500;
+    cursor: move;
+    user-select: none;
+}
+
+.window .window-titlebar-icon {
+    font-size: 16px;
+    margin-right: 5px;
+    line-height: 1;
+}
+
+.window .window-controls {
+    flex-shrink: 0;
+}
+
+/* Window Content */
+.window-content {
+    flex: 1;
+    overflow: auto;
+    background: white;
+    border-top: 1px solid rgba(255, 255, 255, 0.5);
+    display: flex;
+    flex-direction: column;
+}
+
+/* Window Menu Bar (optional) */
+.window-menubar {
+    background: linear-gradient(to bottom, #f5f5f5, #e8e8e8);
+    border-bottom: 1px solid #d0d0d0;
+    padding: 3px 4px;
+    display: flex;
+    gap: 15px;
+    font-size: 11px;
+    flex-shrink: 0;
+}
+
+.window-menubar-item {
+    padding: 3px 6px;
+    cursor: pointer;
+    border-radius: 2px;
+    transition: all 0.1s ease;
+}
+
+.window-menubar-item:hover {
+    background: rgba(0, 120, 212, 0.2);
+}
+
+/* Window Resizing */
+.window.resizable::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    right: 0;
+    width: 20px;
+    height: 20px;
+    cursor: nwse-resize;
+    background: linear-gradient(135deg, transparent 50%, #a0a0a0 50%);
+    z-index: 10;
+}
+
+/* Status Bar */
+.window-statusbar {
+    background: linear-gradient(to bottom, #f5f5f5, #e8e8e8);
+    border-top: 1px solid #d0d0d0;
+    padding: 2px 4px;
+    font-size: 10px;
+    color: #666;
+    flex-shrink: 0;
+    display: flex;
+    justify-content: space-between;
+}
+
+/* Animations */
+@keyframes slideIn {
+    from {
+        opacity: 0;
+        transform: scale(0.9);
+    }
+    to {
+        opacity: 1;
+        transform: scale(1);
+    }
+}
+
+@keyframes minimizeOut {
+    from {
+        opacity: 1;
+        transform: scale(1);
+    }
+    to {
+        opacity: 0;
+        transform: scale(0.8);
+    }
+}
+
+.window {
+    animation: slideIn 0.2s ease;
+}
+
+/* Window-specific layouts */
+.window.notepad-window .window-content {
+    padding: 5px;
+}
+
+.window.explorer-window .window-content {
+    display: flex;
+    flex-direction: row;
+}
+
+.window.devmgr-window .window-content {
+    padding: 5px;
+}
+
+.window.control-window .window-content {
+    padding: 10px;
+}

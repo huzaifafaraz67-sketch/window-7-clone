@@ -1,0 +1,78 @@
+/* Desktop Grid & Icons CSS */
+
+.desktop {
+    width: 100%;
+    height: calc(100vh - 40px);
+    position: relative;
+    background: linear-gradient(135deg, #0a47a0 0%, #2e7ad1 100%);
+    background-attachment: fixed;
+    overflow: hidden;
+}
+
+.desktop-icons {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, 80px);
+    gap: 30px;
+    padding: 20px;
+    align-content: start;
+    user-select: none;
+}
+
+.desktop-icon {
+    width: 80px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 5px;
+    cursor: pointer;
+    padding: 5px;
+    border-radius: 4px;
+    transition: all 0.15s ease;
+    text-align: center;
+}
+
+.desktop-icon:hover {
+    background: rgba(255, 255, 255, 0.2);
+    border-radius: 4px;
+}
+
+.desktop-icon.selected {
+    background: rgba(0, 120, 212, 0.4);
+    border: 1px solid rgba(0, 120, 212, 0.8);
+}
+
+.icon-image {
+    font-size: 48px;
+    line-height: 1;
+    filter: drop-shadow(1px 1px 2px rgba(0, 0, 0, 0.3));
+}
+
+.icon-label {
+    color: white;
+    font-size: 10px;
+    font-weight: 500;
+    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5);
+    word-wrap: break-word;
+    width: 100%;
+}
+
+.desktop-icon:hover .icon-label {
+    text-decoration: underline;
+}
+
+/* Double-click animation */
+@keyframes iconDoubleClick {
+    0% {
+        transform: scale(1);
+    }
+    50% {
+        transform: scale(0.95);
+    }
+    100% {
+        transform: scale(1);
+    }
+}
+
+.desktop-icon.launching {
+    animation: iconDoubleClick 0.3s ease;
+}
