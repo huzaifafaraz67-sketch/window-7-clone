@@ -1,0 +1,171 @@
+/* Control Panel Application CSS */
+
+.control-window .window-content {
+    padding: 10px !important;
+}
+
+.control-tabs {
+    display: flex;
+    gap: 2px;
+    border-bottom: 1px solid #d0d0d0;
+    margin-bottom: 15px;
+    background: #f5f5f5;
+    padding: 0 4px;
+}
+
+.control-tab {
+    padding: 6px 15px;
+    cursor: pointer;
+    border: 1px solid #d0d0d0;
+    background: linear-gradient(to bottom, #f5f5f5, #e8e8e8);
+    border-radius: 3px 3px 0 0;
+    transition: all 0.1s ease;
+    font-size: 11px;
+    font-weight: 500;
+}
+
+.control-tab:hover {
+    background: linear-gradient(to bottom, #ffffff, #f5f5f5);
+}
+
+.control-tab.active {
+    background: white;
+    border-bottom: 1px solid white;
+    color: #0078d4;
+}
+
+.control-content {
+    display: none;
+}
+
+.control-content.active {
+    display: block;
+}
+
+.control-section {
+    margin-bottom: 20px;
+    padding-bottom: 15px;
+    border-bottom: 1px solid #e0e0e0;
+}
+
+.control-section:last-child {
+    border-bottom: none;
+}
+
+.control-section-title {
+    font-weight: bold;
+    color: #0078d4;
+    margin-bottom: 8px;
+    font-size: 12px;
+}
+
+.control-item {
+    margin-bottom: 12px;
+}
+
+.control-item-label {
+    font-weight: 500;
+    margin-bottom: 4px;
+    font-size: 11px;
+    color: #333;
+}
+
+.control-item-description {
+    font-size: 10px;
+    color: #666;
+    margin-bottom: 6px;
+}
+
+.control-toggle {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    cursor: pointer;
+}
+
+.control-checkbox {
+    width: 16px;
+    height: 16px;
+    cursor: pointer;
+}
+
+.control-slider {
+    width: 100%;
+    height: 8px;
+    cursor: pointer;
+    -webkit-appearance: none;
+    appearance: none;
+    background: linear-gradient(to right, #e8e8e8, #d0d0d0);
+    border-radius: 4px;
+    outline: none;
+}
+
+.control-slider::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 16px;
+    height: 16px;
+    background: linear-gradient(to bottom, #f5f5f5, #e0e0e0);
+    border: 1px solid #a0a0a0;
+    border-radius: 8px;
+    cursor: pointer;
+}
+
+.control-slider::-moz-range-thumb {
+    width: 16px;
+    height: 16px;
+    background: linear-gradient(to bottom, #f5f5f5, #e0e0e0);
+    border: 1px solid #a0a0a0;
+    border-radius: 8px;
+    cursor: pointer;
+}
+
+.control-select {
+    width: 100%;
+    padding: 4px 6px;
+    border: 1px solid #a0a0a0;
+    font-size: 11px;
+    border-radius: 2px;
+}
+
+.control-preview {
+    background: linear-gradient(135deg, #0a47a0 0%, #2e7ad1 100%);
+    border: 1px solid #0078d4;
+    border-radius: 3px;
+    padding: 20px;
+    text-align: center;
+    color: white;
+    font-weight: bold;
+    margin-top: 8px;
+    font-size: 12px;
+}
+
+.control-button {
+    padding: 6px 12px;
+    background: linear-gradient(to bottom, #f5f5f5, #e8e8e8);
+    border: 1px solid #a0a0a0;
+    cursor: pointer;
+    border-radius: 3px;
+    font-size: 11px;
+    transition: all 0.1s ease;
+}
+
+.control-button:hover {
+    background: linear-gradient(to bottom, #ffffff, #f0f0f0);
+    border: 1px solid #0078d4;
+}
+
+.control-button:active {
+    background: linear-gradient(to bottom, #e8e8e8, #f5f5f5);
+    box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.2);
+}
+
+.control-info {
+    background: #f0f8ff;
+    border-left: 3px solid #0078d4;
+    padding: 8px;
+    border-radius: 2px;
+    font-size: 10px;
+    color: #333;
+    margin-top: 8px;
+}
