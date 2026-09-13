@@ -2,23 +2,28 @@
 
 const Taskbar = {
     appButtons: {},
+    initialized: false,
 
     initialize() {
+        if (this.initialized) return;
+        
         this.setupStartButton();
         this.startClock();
-        console.log('✅ Taskbar initialized');
+        this.initialized = true;
+        console.log('[TASKBAR] Initialized');
     },
 
     setupStartButton() {
         const startBtn = document.getElementById('start-button');
+        if (!startBtn) return;
+
         startBtn.addEventListener('click', () => {
             this.toggleStartMenu();
         });
 
-        // Close start menu when clicking elsewhere
         document.addEventListener('click', (e) => {
             const startMenu = document.getElementById('start-menu');
-            if (!e.target.closest('#start-button') && !e.target.closest('#start-menu')) {
+            if (startMenu && !e.target.closest('#start-button') && !e.target.closest('#start-menu')) {
                 startMenu.classList.add('hidden');
             }
         });
@@ -26,16 +31,21 @@ const Taskbar = {
 
     toggleStartMenu() {
         const startMenu = document.getElementById('start-menu');
-        startMenu.classList.toggle('hidden');
+        if (startMenu) {
+            startMenu.classList.toggle('hidden');
+        }
     },
 
     startClock() {
         const updateClock = () => {
-            const now = new Date();
-            const hours = String(now.getHours()).padStart(2, '0');
-            const minutes = String(now.getMinutes()).padStart(2, '0');
-            const seconds = String(now.getSeconds()).padStart(2, '0');
-            document.getElementById('system-clock').textContent = `${hours}:${minutes}:${seconds}`;
+            const clockEl = document.getElementById('system-clock');
+            if (clockEl) {
+                const now = new Date();
+                const hours = String(now.getHours()).padStart(2, '0');
+                const minutes = String(now.getMinutes()).padStart(2, '0');
+                const seconds = String(now.getSeconds()).padStart(2, '0');
+                clockEl.textContent = `${hours}:${minutes}:${seconds}`;
+            }
         };
 
         updateClock();
@@ -44,6 +54,7 @@ const Taskbar = {
 
     addAppButton(appName, appConfig) {
         const taskbarApps = document.getElementById('taskbar-apps');
+        if (!taskbarApps) return;
 
         const btn = document.createElement('button');
         btn.className = 'taskbar-app-btn active';
@@ -52,11 +63,13 @@ const Taskbar = {
 
         btn.addEventListener('click', () => {
             const windowEl = document.getElementById(`window-${appName}`);
-            if (windowEl.classList.contains('minimized')) {
-                WindowManager.focusWindow(appName);
-            } else {
-                windowEl.classList.toggle('minimized');
-                this.updateAppButton(appName, windowEl.classList.contains('minimized'));
+            if (windowEl) {
+                if (windowEl.classList.contains('minimized')) {
+                    WindowManager.focusWindow(appName);
+                } else {
+                    windowEl.classList.toggle('minimized');
+                    this.updateAppButton(appName, windowEl.classList.contains('minimized'));
+                }
             }
         });
 
@@ -84,11 +97,11 @@ const Taskbar = {
     }
 };
 
-// Initialize taskbar when DOM is ready
+// Auto-initialize taskbar when DOM is ready
 if (document.readyState === 'loading') {
     document.addEventListener('DOMContentLoaded', () => Taskbar.initialize());
 } else {
     Taskbar.initialize();
 }
 
-console.log('🔧 System32/js/taskbar.js loaded');
+console.log('[SYSTEM32] taskbar.js loaded');

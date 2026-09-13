@@ -6,6 +6,11 @@ const WindowManager = {
 
     createWindow(appName) {
         const windowContainer = document.getElementById('window-container');
+        if (!windowContainer) {
+            console.error('[WINDOWMGR] window-container not found');
+            return;
+        }
+
         const appConfig = this.getAppConfig(appName);
 
         const windowEl = document.createElement('div');
@@ -34,19 +39,21 @@ const WindowManager = {
 
         windowContainer.appendChild(windowEl);
 
-        // Event listeners
+        // Setup controls
         this.setupWindowControls(appName, windowEl);
         this.setupTitleBarDrag(appName, windowEl);
 
         // Initialize app content
-        if (window[appConfig.appModule]) {
-            window[appConfig.appModule].initialize(appName);
+        if (window[appConfig.appModule] && typeof window[appConfig.appModule].initialize === 'function') {
+            try {
+                window[appConfig.appModule].initialize(appName);
+            } catch (e) {
+                console.error(`[WINDOWMGR] Failed to initialize ${appName}:`, e);
+            }
         }
 
         Kernel.registerWindow(appName, windowEl);
         this.focusWindow(appName);
-
-        // Add to taskbar
         Taskbar.addAppButton(appName, appConfig);
     },
 
@@ -93,13 +100,18 @@ const WindowManager = {
                 top: '200px'
             }
         };
-        return configs[appName];
+        return configs[appName] || configs.Notepad;
     },
 
     setupWindowControls(appName, windowEl) {
         const minimizeBtn = windowEl.querySelector('.window-btn.minimize');
         const maximizeBtn = windowEl.querySelector('.window-btn.maximize');
         const closeBtn = windowEl.querySelector('.window-btn.close');
+
+        if (!minimizeBtn || !maximizeBtn || !closeBtn) {
+            console.warn('[WINDOWMGR] Window controls not found');
+            return;
+        }
 
         let isMaximized = false;
         const originalState = {
@@ -109,21 +121,21 @@ const WindowManager = {
             top: windowEl.style.top
         };
 
-        minimizeBtn.addEventListener('click', () => {
+        minimizeBtn.addEventListener('click', (e) => {
+            e.preventDefault();
             windowEl.classList.toggle('minimized');
             Taskbar.updateAppButton(appName, windowEl.classList.contains('minimized'));
         });
 
-        maximizeBtn.addEventListener('click', () => {
+        maximizeBtn.addEventListener('click', (e) => {
+            e.preventDefault();
             if (isMaximized) {
-                // Restore
                 windowEl.style.width = originalState.width;
                 windowEl.style.height = originalState.height;
                 windowEl.style.left = originalState.left;
                 windowEl.style.top = originalState.top;
                 windowEl.style.borderRadius = '4px';
             } else {
-                // Maximize
                 windowEl.style.width = 'calc(100% - 10px)';
                 windowEl.style.height = 'calc(100vh - 50px)';
                 windowEl.style.left = '5px';
@@ -133,7 +145,8 @@ const WindowManager = {
             isMaximized = !isMaximized;
         });
 
-        closeBtn.addEventListener('click', () => {
+        closeBtn.addEventListener('click', (e) => {
+            e.preventDefault();
             windowEl.remove();
             Kernel.unregisterWindow(appName);
             Taskbar.removeAppButton(appName);
@@ -142,6 +155,7 @@ const WindowManager = {
 
     setupTitleBarDrag(appName, windowEl) {
         const titleBar = windowEl.querySelector('.window-titlebar');
+        if (!titleBar) return;
 
         titleBar.addEventListener('mousedown', (e) => {
             if (e.target.closest('.window-controls')) return;
@@ -160,7 +174,6 @@ const WindowManager = {
                 let newX = e.clientX - this.dragOffset.x;
                 let newY = e.clientY - this.dragOffset.y;
 
-                // Boundary constraints
                 newX = Math.max(0, Math.min(newX, window.innerWidth - 100));
                 newY = Math.max(0, Math.min(newY, window.innerHeight - 40));
 
@@ -178,10 +191,8 @@ const WindowManager = {
     },
 
     focusWindow(appName) {
-        // Remove active class from all windows
         document.querySelectorAll('.window').forEach(w => w.classList.remove('active'));
 
-        // Add active class and update z-index
         const windowEl = document.getElementById(`window-${appName}`);
         if (windowEl) {
             windowEl.classList.add('active');
@@ -192,12 +203,13 @@ const WindowManager = {
     }
 };
 
+// Setup window focus on click
 document.addEventListener('click', (e) => {
-    if (e.target.closest('.window')) {
-        const windowEl = e.target.closest('.window');
+    const windowEl = e.target.closest('.window');
+    if (windowEl) {
         const appName = windowEl.id.replace('window-', '');
         WindowManager.focusWindow(appName);
     }
 });
 
-console.log('🔧 System32/js/windowManager.js loaded');
+console.log('[SYSTEM32] windowManager.js loaded');

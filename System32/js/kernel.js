@@ -9,62 +9,92 @@ const Kernel = {
         darkMode: false,
         wallpaper: 'linear-gradient(135deg, #0a47a0 0%, #2e7ad1 100%)'
     },
+    booted: false,
 
     boot() {
-        console.log('🖥️ Kernel: Initializing System32...');
-        this.initializeEventListeners();
-        this.loadSettings();
-        console.log('✅ Kernel: Boot Complete. Ready to launch applications.');
+        console.log('[KERNEL] Initializing System32...');
+        
+        // Wait for DOM to be fully ready
+        if (document.readyState === 'loading') {
+            document.addEventListener('DOMContentLoaded', () => this.completeBootSequence());
+        } else {
+            this.completeBootSequence();
+        }
+    },
+
+    completeBootSequence() {
+        setTimeout(() => {
+            this.initializeEventListeners();
+            this.loadSettings();
+            this.booted = true;
+            console.log('[KERNEL] Boot Complete. Ready to launch applications.');
+        }, 500);
     },
 
     initializeEventListeners() {
-        // Desktop icon double-click to launch apps
-        document.querySelectorAll('.desktop-icon').forEach(icon => {
-            icon.addEventListener('dblclick', (e) => {
-                const appName = e.currentTarget.getAttribute('data-app');
-                this.launchApp(appName);
-                e.currentTarget.classList.add('launching');
-                setTimeout(() => e.currentTarget.classList.remove('launching'), 300);
+        // Wait for desktop icons to exist
+        const desktopIcons = document.querySelectorAll('.desktop-icon');
+        if (desktopIcons.length > 0) {
+            desktopIcons.forEach(icon => {
+                icon.addEventListener('dblclick', (e) => {
+                    const appName = e.currentTarget.getAttribute('data-app');
+                    if (appName) {
+                        this.launchApp(appName);
+                        e.currentTarget.classList.add('launching');
+                        setTimeout(() => e.currentTarget.classList.remove('launching'), 300);
+                    }
+                });
             });
-        });
+        }
 
         // Start menu items
-        document.querySelectorAll('.start-menu-item').forEach(item => {
-            item.addEventListener('click', () => {
-                const appName = item.getAttribute('data-app');
-                this.launchApp(appName);
-                Taskbar.toggleStartMenu();
+        const startMenuItems = document.querySelectorAll('.start-menu-item');
+        if (startMenuItems.length > 0) {
+            startMenuItems.forEach(item => {
+                item.addEventListener('click', () => {
+                    const appName = item.getAttribute('data-app');
+                    if (appName) {
+                        this.launchApp(appName);
+                        Taskbar.toggleStartMenu();
+                    }
+                });
             });
-        });
+        }
 
         // Shutdown button
-        document.querySelector('.start-menu-shutdown').addEventListener('click', () => {
-            if (confirm('🛑 Shut down Windows 7 Web OS?')) {
-                console.log('System shutting down...');
-                document.body.style.opacity = '0.5';
-                setTimeout(() => location.reload(), 500);
-            }
-        });
+        const shutdownBtn = document.querySelector('.start-menu-shutdown');
+        if (shutdownBtn) {
+            shutdownBtn.addEventListener('click', () => {
+                if (confirm('Shut down Windows 7 Web OS?')) {
+                    console.log('[SYSTEM] Shutting down...');
+                    document.body.style.opacity = '0.5';
+                    setTimeout(() => location.reload(), 500);
+                }
+            });
+        }
     },
 
     launchApp(appName) {
+        if (!this.booted) {
+            console.warn('[KERNEL] System not ready');
+            return;
+        }
+
         if (this.windows[appName]) {
-            // App already open - focus it
             WindowManager.focusWindow(appName);
         } else {
-            // Launch new app
             WindowManager.createWindow(appName);
         }
     },
 
     registerWindow(appName, windowElement) {
         this.windows[appName] = windowElement;
-        console.log(`✅ Kernel: Window registered - ${appName}`);
+        console.log(`[KERNEL] Window registered - ${appName}`);
     },
 
     unregisterWindow(appName) {
         delete this.windows[appName];
-        console.log(`🗑️ Kernel: Window unregistered - ${appName}`);
+        console.log(`[KERNEL] Window unregistered - ${appName}`);
     },
 
     getNextZIndex() {
@@ -85,24 +115,17 @@ const Kernel = {
     },
 
     applySettings() {
-        // Apply dark mode
         if (this.settings.darkMode) {
             document.body.classList.add('dark-mode');
         } else {
             document.body.classList.remove('dark-mode');
         }
 
-        // Apply wallpaper
-        document.getElementById('desktop').style.background = this.settings.wallpaper;
-
-        // Apply glass opacity to all windows
-        const glassElements = document.querySelectorAll('.glass-effect, .glass-dark');
-        glassElements.forEach(el => {
-            if (el.classList.contains('glass-dark')) {
-                el.style.opacity = this.settings.glassOpacity;
-            }
-        });
+        const desktop = document.getElementById('desktop');
+        if (desktop) {
+            desktop.style.background = this.settings.wallpaper;
+        }
     }
 };
 
-console.log('🔧 System32/js/kernel.js loaded');
+console.log('[SYSTEM32] kernel.js loaded');
