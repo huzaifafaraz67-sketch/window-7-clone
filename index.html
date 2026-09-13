@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Windows 7 Web OS</title>
+    
+    <!-- Core System CSS -->
+    <link rel="stylesheet" href="System32/css/aero.css">
+    <link rel="stylesheet" href="System32/css/desktop.css">
+    <link rel="stylesheet" href="System32/css/taskbar.css">
+    <link rel="stylesheet" href="System32/css/window.css">
+    
+    <!-- App-specific CSS -->
+    <link rel="stylesheet" href="ProgramFiles/Notepad/notepad.css">
+    <link rel="stylesheet" href="ProgramFiles/FileExplorer/explorer.css">
+    <link rel="stylesheet" href="ProgramFiles/DeviceManager/devmgr.css">
+    <link rel="stylesheet" href="ProgramFiles/ControlPanel/control.css">
+</head>
+<body>
+    <!-- Desktop Container -->
+    <div id="desktop" class="desktop">
+        <!-- Desktop Icons -->
+        <div class="desktop-icons">
+            <div class="desktop-icon" data-app="FileExplorer">
+                <div class="icon-image">📁</div>
+                <div class="icon-label">Computer</div>
+            </div>
+            <div class="desktop-icon" data-app="ControlPanel">
+                <div class="icon-image">⚙️</div>
+                <div class="icon-label">Control Panel</div>
+            </div>
+            <div class="desktop-icon" data-app="Notepad">
+                <div class="icon-image">📝</div>
+                <div class="icon-label">Notepad</div>
+            </div>
+            <div class="desktop-icon" data-app="DeviceManager">
+                <div class="icon-image">🖥️</div>
+                <div class="icon-label">Device Manager</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Window Container (apps will be created here) -->
+    <div id="window-container" class="window-container"></div>
+
+    <!-- Taskbar -->
+    <div id="taskbar" class="taskbar">
+        <div class="taskbar-left">
+            <button id="start-button" class="start-button">
+                <span class="start-label">Start</span>
+            </button>
+            <div id="taskbar-apps" class="taskbar-apps"></div>
+        </div>
+        <div class="taskbar-right">
+            <div id="system-clock" class="system-clock">00:00:00</div>
+        </div>
+    </div>
+
+    <!-- Start Menu (Hidden by default) -->
+    <div id="start-menu" class="start-menu hidden">
+        <div class="start-menu-content">
+            <div class="start-menu-section">
+                <div class="start-menu-header">All Programs</div>
+                <div class="start-menu-item" data-app="Notepad">📝 Notepad</div>
+                <div class="start-menu-item" data-app="FileExplorer">📁 File Explorer</div>
+                <div class="start-menu-item" data-app="DeviceManager">🖥️ Device Manager</div>
+                <div class="start-menu-item" data-app="ControlPanel">⚙️ Control Panel</div>
+            </div>
+            <div class="start-menu-footer">
+                <div class="start-menu-shutdown">🔴 Shut Down</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- System Scripts -->
+    <script src="System32/js/kernel.js"></script>
+    <script src="System32/js/windowManager.js"></script>
+    <script src="System32/js/taskbar.js"></script>
+
+    <!-- App Scripts -->
+    <script src="ProgramFiles/Notepad/notepad.js"></script>
+    <script src="ProgramFiles/FileExplorer/explorer.js"></script>
+    <script src="ProgramFiles/DeviceManager/devmgr.js"></script>
+    <script src="ProgramFiles/ControlPanel/control.js"></script>
+
+    <script>
+        // Boot the system on page load
+        window.addEventListener('load', () => {
+            console.log('🖥️ Windows 7 Web OS - System Boot Initiated');
+            Kernel.boot();
+        });
+    </script>
+</body>
+</html>
